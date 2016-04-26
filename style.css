@@ -1,0 +1,141 @@
+/* media query */
+
+/*
+@media screen (min-width: 0px) and (max-width: 600px) {
+    #expand{display:block;}
+}
+
+@media screen and (min-width: 601px){
+  #expand { display: none; }
+}
+*/
+
+.myButton {
+	-moz-box-shadow: 0px 0px 0px 2px #9fb4f2;
+	-webkit-box-shadow: 0px 0px 0px 2px #9fb4f2;
+	box-shadow: 0px 0px 0px 2px #9fb4f2;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #7892c2), color-stop(1, #476e9e));
+	background:-moz-linear-gradient(top, #7892c2 5%, #476e9e 100%);
+	background:-webkit-linear-gradient(top, #7892c2 5%, #476e9e 100%);
+	background:-o-linear-gradient(top, #7892c2 5%, #476e9e 100%);
+	background:-ms-linear-gradient(top, #7892c2 5%, #476e9e 100%);
+	background:linear-gradient(to bottom, #7892c2 5%, #476e9e 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#7892c2', endColorstr='#476e9e',GradientType=0);
+	background-color:#7892c2;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	border-radius:10px;
+	border:1px solid #4e6096;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Verdana;
+	font-size:15px;
+	padding:5px 20px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #283966;
+}
+.myButton:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #476e9e), color-stop(1, #7892c2));
+	background:-moz-linear-gradient(top, #476e9e 5%, #7892c2 100%);
+	background:-webkit-linear-gradient(top, #476e9e 5%, #7892c2 100%);
+	background:-o-linear-gradient(top, #476e9e 5%, #7892c2 100%);
+	background:-ms-linear-gradient(top, #476e9e 5%, #7892c2 100%);
+	background:linear-gradient(to bottom, #476e9e 5%, #7892c2 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#476e9e', endColorstr='#7892c2',GradientType=0);
+	background-color:#476e9e;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+
+
+h1 {
+  font-size: x-large;
+  margin: 6px 0px 6px 0px;
+}
+
+video {
+  border: double 8px lightgray;
+}
+
+.videoContainer {
+  max-width: 445px;
+}
+
+#positionBar {
+height: 30px;
+  color: white;
+  font-weight: bold;
+  background: steelblue;
+  text-align: center;
+}
+
+#positionBar span {
+  display: inline-block;
+  margin-top: 7px;
+}
+
+#durationBar {
+  border: solid 1px black;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+#bufferBar {
+  background: lightsteelblue;
+  position: absolute;
+}
+
+#volume{font-family:Verdana;color:#ffffff;}
+
+input[type="range"]{cursor:pointer;}
+
+.controale{width:100%;background-color:#3333CC;text-align:center;position:relative;}
+
+
+.side{width:37.5%;height:230px;float:left;background-color:#3333CC;}
+
+.arrow-left {
+	width: 0; 
+	height: 0; 
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent; 
+	
+	border-right:10px solid white; 
+}
+
+.arrow-right {
+	width: 0; 
+	height: 0; 
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent; 
+	
+	border-left:10px solid white; 
+}
+
+.square{width:20px;
+		height:20px;
+		background-color: white;}
+
+.pause{height:20px;width:4px;background-color: white;}
+
+#pause{display:none;}
+
+#inainte,#play,#pause,#stop,#dupa{margin-left:3px;}
+
+#songname{font-size:12px;width:100%;height:25px;background-color:#7979E0;margin-bottom:10px;padding-top:5px;color:white;font-family:"Comic Sans MS", cursive, sans-serif;}
+#search{border-radius: 25px;margin-bottom:20px;color:#1515BD;height:25px;text-indent:5px;font-family:"Comic Sans MS", cursive, sans-serif;}
+
+#expand{background:url('minicons2-35-512.png');position:absolute;bottom:0px;left:0px;width:32px;height:32px;cursor:pointer;border:none;}
+
+#repeat{color:rgb(255, 255, 255);}
+.border{border: 1px solid;}
+
+.continut{width:100%;background-color:#0f4c5b;text-align:center;position:relative;display:none;}
+
+.stylesong{color:navy;border:1px solid black;padding:3px 0px 3px 0px;-webkit-transition: width 1s;transition: width 1s;font-family:Arial, Helvetica, sans-serif;font-weight:bold;}
+.songname{background-color:#3EB7F3;}
+.songname:hover{background-color:#95d8f9;cursor:pointer;}
+.activesong{background-color:#95d8f9;}

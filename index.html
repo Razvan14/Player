@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Playston</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+  <script src="jquery.js"></script>
+
+  <script src="controls.js"></script>
+
+<script>
+
+var songs=[];
+
+$(document).ready(function(){
+
+// toggle buton repeat
+
+$("#repeat").click(function(){
+
+if( $("#repeat").css("color")=="rgb(255, 255, 255)" )
+{	$("#repeat").css("color","rgb(11, 31, 149)");
+	//alert($("#repeat").css("color"))
+
+}
+else if( $("#repeat").css("color")!="#fff" )
+{	$("#repeat").css("color","rgb(255, 255, 255)");
+	//alert("alta culoare")
+}
+
+});
+
+$("#search").change(function(){
+var searchtext = $("#search").val();
+var idx=[];	//vector cu pozitiile melodiilor care se potrivesc cu patternul cautarii
+
+if($("#search").val()==""){$(".stylesong").show();var idx=[];}
+
+else{
+$(".stylesong").each(function(i){
+var patt = new RegExp(searchtext, "gi");
+if($(this).html().match(patt))
+{	idx.push(i);	//daca se potriveste melodia cu patternul, adauga pozitia melodiei in vectorul idx
+	return;
+	
+	}
+		});
+
+$(".stylesong").hide();		//ascunde toate melodiile din lista
+for(var i=0;i<idx.length;i++)				//arata melodiile care se potrivesc cu patternul
+$(".stylesong:eq( "+idx[i]+" )").show();
+
+}
+	});
+
+		});
+
+function show()
+{
+
+  for(var i=0;i<songs.length;i++)
+    alert(songs[i]+" "+songs.length)
+}
+
+function StripSlash(url)     
+{     
+    return url.substring(url.lastIndexOf('/') + 1).split("%20").join(" ");
+} 
+
+	var db = openDatabase('mydb', '1.0', 'Music DB', 2 * 1024 * 1024);
+	var video;
+	var display;
+	var min=0;
+	var sec;
+	var ShuffledSongs=[];
+	var currentSongList=[];
+
+ //INTOARCE TOATE FISIERELE DIN OBIECTUL FILELIST
+$(document).ready(function(){
+
+  function readMultipleFiles(evt) {
+   
+    var files = evt.target.files; 
+        
+    if (files) {
+        for (var i=0, f; f=files[i]; i++) {
+            var r = new FileReader();
+            r.onload = (function(f) {
+                return function(e) {
+                    var contents = e.target.result;
+                    //alert( "Got the file.\n" +"name: " + f.name+" "+i); 
+					songs.push(f.name);
+					db.transaction(function (tx) {
+            var insertStatement = "insert into MUZICA (song) values (?)";
+
+   tx.executeSql('CREATE TABLE IF NOT EXISTS MUZICA (id INTEGER PRIMARY KEY AUTOINCREMENT, song TEXT)');
+   tx.executeSql(insertStatement, [f.name]);
+   
+});
+                
+                };
+            })(f);
+
+           r.readAsText(f);
+        }   
+    } else {
+	      alert("Failed to load files"); 
+    }
+  }
+  
+  document.getElementById('fileinput').addEventListener('change', readMultipleFiles, false);
+  document.getElementById('shuffle').addEventListener('click', amesteca, false);
+  
+$(document).ready(function(){
+ 
+  document.getElementById('shuffle').addEventListener('click', amesteca, false);
+  
+  
+  //functie redare melodie urmatoare
+$("#dupa").click(function(){
+
+var inx = songs.indexOf(StripSlash(videoPlayer.src));
+//alert(StripSlash(videoPlayer.src)+" nr "+inx)
+if(inx==songs.length-1)
+{
+$(".stylesong").each(function(){
+        if($(this).html()==songs[songs.length-1] && $(this).hasClass("activesong"))
+		$(this).removeClass("activesong");
+		$(this).addClass("songname");
+    });
+
+//videoPlayer.src="songs/"+$(this).html();
+videoPlayer.src="songs/"+songs[0];
+$(".stylesong").first().removeClass("songname");
+$(".stylesong").first().addClass("activesong");
+play();
+
+}
+else{
+
+var indx;
+for(var i=0;i<songs.length;i++){
+        if($(".stylesong:eq( "+i+" )").html()==StripSlash(videoPlayer.src) && $(".stylesong:eq( "+i+" )").hasClass("activesong")){
+		//alert("melodia are indexul"+i)
+		$(".stylesong:eq( "+i+" )").removeClass("activesong").addClass("songname");
+		indx=i;
+		//alert("index="+i)
+		break;}
+	
+	}
+	indx=indx+1;
+	videoPlayer.src="songs/"+songs[indx];
+	$(".stylesong:eq( "+indx+" )").removeClass("songname").addClass("activesong");
+	play();
+	
+	return false;
+	
+	}
+	
+	});
+
+
+// reda melodie din lista
+$(".stylesong").click(function(){
+
+$(".stylesong").each(function(){
+        if($(this).hasClass("activesong"))
+		$(this).removeClass("activesong");
+		$(this).addClass("songname");
+    });
+
+videoPlayer.src="songs/"+$(this).html();
+//$(".stylesong").css("background-color","#3EB7F3");
+$(this).removeClass("songname");
+$(this).addClass("activesong");
+play();
+});
+  
+  });
+
+
+  });
+  
+  
+function shuffleList()
+  {
+	if($("#shuffle").val()=="off")
+	{$("#shuffle").css("border","1px solid #7979E0");
+	$("#shuffle").val("on");
+	//alert("shuffle "+$("#shuffle").val())
+	songs = ShuffledSongs.slice();
+	//alert(songs[0])
+	videoPlayer.src="songs/"+songs[0];
+	}
+	else if($("#shuffle").val()=="on")
+	{$("#shuffle").css("border","0px solid");
+	$("#shuffle").val("off");
+	//alert("shuffle "+$("#shuffle").val())
+	songs = currentSongList.slice();
+	videoPlayer.src="songs/"+songs[0];
+	}
+  }
+  
+  function amesteca()
+  {
+  ShuffledSongs = songs.slice();
+			currentSongList = songs.slice();
+				shuffle(ShuffledSongs);
+				//alert("vectorul amestecat: "+ShuffledSongs[0]+" "+ShuffledSongs[1]+" "+ShuffledSongs[2])
+					var videoPlayer = document.getElementById("videoPlayer");
+						videoPlayer.src="songs/"+ShuffledSongs[0];               // alege prima melodie din vector
+							$("#play").show();
+								$("#pause").hide();
+									videoPlayer.pause();
+										videoPlayer.currentTime = 0;
+							
+							$(".stylesong").each(function(){
+								if($(this).hasClass("activesong"))
+									$(this).removeClass("activesong");
+										$(this).addClass("songname");
+											if($(this).html()==ShuffledSongs[0])
+												$(this).addClass("activesong");
+													$("#pause").show();
+													$("#play").hide();
+													videoPlayer.play();
+														var songName = StripSlash(videoPlayer.src);
+															$("#songname").html(songName);
+    });
+						}
+ 
+  
+function getDB(){
+localStorage.mzk="";
+	db.transaction(function (tx) {
+   tx.executeSql('SELECT * FROM MUZICA', [], function (tx, results) {
+   var len = results.rows.length, i;
+   var msg = "<p>Found rows: " + len + "</p>";
+   document.querySelector('#status').innerHTML +=  msg;
+   for (i = 0; i < len; i++){
+      //alert(results.rows.item(i).song);
+	  //alert(stringMel=stringMel+'<div class="songname" style="background-color:#3EB7F3;color:white;border:1px solid black;padding:3px 0px 3px 0px;">'+results.rows.item(i).song+'</div>');
+		songs[i] = results.rows.item(i).song;
+		localStorage.mzk = localStorage.mzk+","+results.rows.item(i).song;
+   }
+ }, null);
+});
+
+}  
+
+function ShowData(){
+	//alert("sters")
+}
+
+// STERGE DIN TABEL MELODIILE
+  function deleteData() {
+      var deleteStatement = "DELETE FROM MUZICA";
+      db.transaction(function (tx) {
+          tx.executeSql(deleteStatement,ShowData(), function(){alert("s-a sters")});
+      });
+} 
+
+
+
+</script>
+</head>
+
+<body>
+  <h1>Playston</h1>
+<center><div class="videoContainer">
+  <video id="videoPlayer" ontimeupdate="progressUpdate()">
+    <source id="GNR" src="" type="video/mp4">
+ 
+  </video>
+</div>
+</center>
+
+<div class="barContainer">
+  <div id="durationBar">
+    <div id="positionBar"><span id="displayStatus">Idle.</span></div>
+  </div>
+</div>
+
+
+	
+	
+
+	
+    <div class="controale">
+	
+	<button id="expand"></button>
+	<div id="songname"></div><div><input id="search" type="text"/></div>
+	
+	<button class="myButton" id="inainte" title="back"><span style="float:left;" class="arrow-left"></span><span style="float:left;" class="arrow-left"></span></button>
+    <button class="myButton" id="play" onclick="play()" title="play"><span style="float:left;" class="arrow-right"></span></button>
+    <button class="myButton" id="pause" onclick="pause()" title="pause"><span style="float:left;" class="pause"></span><span style="float:left;margin-left:4px;" class="pause"></span></button>
+    <button class="myButton" id="stop" onclick="stop()" title="stop"><span style="float:left;" class="square"></span></button>
+	<button class="myButton" id="dupa" title="forward"><span style="float:left;" class="arrow-right"></span><span style="float:left;" class="arrow-right"></span></button>
+    <br/><br/>
+	
+    <button class="myButton" onclick="speedUp()">Fast</button>&nbsp;
+    <button class="myButton" onclick="slowDown()">Slow</button>&nbsp;
+    <button class="myButton" onclick="normalSpeed()">Normal</button><br/>
+	
+    <input style="margin-top:10px;" type="range" name="points" min="0" max="100" value="50"><span id="volume"><span>
+	
+
+
+	</div>
+	
+	<div class="continut">
+	
+	<button id="shuffle" style="width:97%;margin:10px 0px 5px 0px;font-weight:bold;" class="myButton">SHUFFLE</button>
+	<button id="repeat" style="width:97%;margin:10px 0px 10px 0px;font-weight:bold;" class="myButton">REPEAT</button>
+	<button id="repeat" style="width:97%;margin:10px 0px 10px 0px;font-weight:bold;" class="myButton"><input type="file" id="fileinput" webkitdirectory multiple /></button>
+	<button style="width:97%;margin:10px 0px 10px 0px;font-weight:bold;" class="myButton" onclick="getDB()">Records</button><br/>
+	<button style="width:97%;margin:10px 0px 10px 0px;font-weight:bold;" class="myButton" onclick="deleteData()">Delete songs</button><br/>
+	<script>
+	//alert(localStorage.mzk)
+	var melodii=["a","b","c"];
+	for(var i=1;i<localStorage.mzk.split(",").length;i++)
+	{
+		document.write('<div class="songname stylesong">'+localStorage.mzk.split(",")[i]+'</div>');
+		
+	}
+	</script>
+	
+	</div>
+
+	
+	
+	
+
+  
+<span id="repeat"></span>
+
+<!--<button onclick="show()">show songs</button><br/>-->
+<!--<button onclick="amesteca()">vector amestecat</button>-->
+
+<div id="status" name="status">Status Message</div>
+</body>
+</html>
